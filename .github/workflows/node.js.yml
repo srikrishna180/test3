@@ -60,14 +60,19 @@ jobs:
       - name: Restart PM2 process
         run: |
           cd "$DEPLOY_DIR"
+
           if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-            START_SCRIPT="start-prod"
+            pm2 delete "$PM2_NAME" || true
+            pm2 start npm --name "$PM2_NAME" -- run start-prod
           elif [[ "$GITHUB_REF" == "refs/heads/qa" ]]; then
-            START_SCRIPT="start-qa"
+            pm2 delete "$PM2_NAME" || true
+            pm2 start npm --name "$PM2_NAME" -- run start-qa
           elif [[ "$GITHUB_REF" == "refs/heads/dev" ]]; then
-            START_SCRIPT="start-dev"
+            pm2 delete "$PM2_NAME" || true
+            pm2 start npm --name "$PM2_NAME" -- run start-dev
+          else
+            echo "Unknown branch. Cannot start PM2 process."
+          exit 1
           fi
 
-          pm2 delete "$PM2_NAME" || true
-          pm2 start npm --name "$PM2_NAME" -- run "$START_SCRIPT"
           pm2 save
