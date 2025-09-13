@@ -48,4 +48,6 @@ jobs:
       - name: Start production server
         run: |
           cd /var/www/react-app
-          npm run start
+          pm2 delete react-router-app || true
+          pm2 start npm --name react-router-app -- run start
+          pm2 save
