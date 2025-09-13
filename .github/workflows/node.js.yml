@@ -28,11 +28,6 @@ jobs:
       - name: Build React Router App
         run: npm run build
 
-      # - name: Upload build artifacts (optional)
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: react-router-build
-      #     path: build/server/
       - name: Move build and package files to /var/www/react-app/
         run: |
           sudo rm -rf /var/www/react-app/*
