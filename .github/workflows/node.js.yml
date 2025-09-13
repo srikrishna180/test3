@@ -36,6 +36,6 @@ jobs:
       - name: Move build and package files to /var/www/react-app/
         run: |
           sudo rm -rf /var/www/react-app/*
-          sudo cp -r build/server/* /var/www/react-app/
+          sudo cp -r build/* /var/www/react-app/
           sudo cp package.json /var/www/react-app/
           sudo cp package-lock.json /var/www/react-app/ || true  # optional if it exists
