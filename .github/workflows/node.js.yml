@@ -37,4 +37,4 @@ jobs:
         run: |
           sudo mkdir -p /var/www/react-app
           sudo rm -rf /var/www/react-app/*
-          sudo cp -r build/server/* /var/www/react-app/
+          sudo cp -r build/* /var/www/react-app/
