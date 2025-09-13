@@ -39,3 +39,8 @@ jobs:
           sudo cp -r build/* /var/www/react-app/
           sudo cp package.json /var/www/react-app/
           sudo cp package-lock.json /var/www/react-app/ || true  # optional if it exists
+
+      - name: Install production dependencies
+        run: |
+          cd /var/www/react-app
+          npm ci --omit=dev
