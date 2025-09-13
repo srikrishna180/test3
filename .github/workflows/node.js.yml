@@ -44,3 +44,8 @@ jobs:
         run: |
           cd /var/www/react-app
           npm ci --omit=dev
+
+      - name: Start production server
+        run: |
+          cd /var/www/react-app
+          npm run start
