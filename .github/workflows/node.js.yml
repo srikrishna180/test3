@@ -1,11 +1,11 @@
-name: Build React Router App
+name: Deploy React Router App
 
 on:
   push:
-    branches: ["main"]
+    branches: ["dev", "qa", "main"]
 
 jobs:
-  build:
+  deploy:
     runs-on: self-hosted
 
     strategy:
@@ -28,21 +28,38 @@ jobs:
       - name: Build React Router App
         run: npm run build
 
-      - name: Move build and package files to /var/www/react-app/
+      - name: Set environment variables based on branch
         run: |
-          sudo rm -rf /var/www/react-app/*
-          sudo cp -r build/* /var/www/react-app/
-          sudo cp package.json /var/www/react-app/
-          sudo cp package-lock.json /var/www/react-app/ || true  # optional if it exists
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            echo "DEPLOY_DIR=/var/www/react-app-prod" >> $GITHUB_ENV
+            echo "PM2_NAME=react-router-app-prod" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF}" == "refs/heads/qa" ]]; then
+            echo "DEPLOY_DIR=/var/www/react-app-qa" >> $GITHUB_ENV
+            echo "PM2_NAME=react-router-app-qa" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF}" == "refs/heads/dev" ]]; then
+            echo "DEPLOY_DIR=/var/www/react-app-dev" >> $GITHUB_ENV
+            echo "PM2_NAME=react-router-app-dev" >> $GITHUB_ENV
+          else
+            echo "Unknown branch, skipping deployment."
+            exit 1
+          fi
+
+      - name: Deploy build to target environment
+        run: |
+          sudo mkdir -p "$DEPLOY_DIR"
+          sudo rm -rf "$DEPLOY_DIR"/*
+          sudo cp -r build/* "$DEPLOY_DIR"/
+          sudo cp package.json "$DEPLOY_DIR"/
+          sudo cp package-lock.json "$DEPLOY_DIR"/ || true
 
       - name: Install production dependencies
         run: |
-          cd /var/www/react-app
+          cd "$DEPLOY_DIR"
           npm ci --omit=dev
 
-      - name: Start production server
+      - name: Restart PM2 process
         run: |
-          cd /var/www/react-app
-          pm2 delete react-router-app || true
-          pm2 start npm --name react-router-app -- run start
+          cd "$DEPLOY_DIR"
+          pm2 delete "$PM2_NAME" || true
+          pm2 start npm --name "$PM2_NAME" -- run start
           pm2 save
