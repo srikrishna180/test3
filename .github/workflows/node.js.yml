@@ -2,7 +2,7 @@ name: Build React Router App
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -28,8 +28,13 @@ jobs:
       - name: Build React Router App
         run: npm run build
 
-      - name: Upload build artifacts (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: react-router-build
-          path: build/server/
+      # - name: Upload build artifacts (optional)
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: react-router-build
+      #     path: build/server/
+      - name: Move built server to /var/www/react-app/
+        run: |
+          sudo mkdir -p /var/www/react-app
+          sudo rm -rf /var/www/react-app/*
+          sudo cp -r build/server/* /var/www/react-app/
