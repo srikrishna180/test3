@@ -6,7 +6,7 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "typecheck": "react-router typegen && tsc",
-    "start-dev": "PORT=3001 react-router-serve .build/server/index.js",
+    "start-dev": "PORT=3001 react-router-serve ./build/server/index.js",
     "start-qa": "PORT=3002 react-router-serve ./server/index.js",
     "start-prod": "PORT=3000 react-router-serve ./build/server/index.js"
   },
