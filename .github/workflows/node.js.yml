@@ -48,7 +48,7 @@ jobs:
         run: |
           sudo mkdir -p "$DEPLOY_DIR"
           sudo rm -rf "$DEPLOY_DIR"/*
-          sudo cp -r build/* "$DEPLOY_DIR"/
+          sudo cp -r build "$DEPLOY_DIR"/
           sudo cp package.json "$DEPLOY_DIR"/
           sudo cp package-lock.json "$DEPLOY_DIR"/ || true
 
