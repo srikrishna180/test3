@@ -105,7 +105,7 @@ const Home = () => {
 
   return (
     <div className="mx-auto max-w-md p-5">
-      <div className="text-4xl flex justify-center">QA Env</div>
+      <div className="text-4xl flex justify-center">Prod Env</div>
       {showSuccess && (
         <Banner
           className={
